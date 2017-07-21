@@ -75,6 +75,12 @@ public class MatrixUtil {
 
             matrixC[rMatrix.index] = rMatrix.result;
         }
+        int[][] CT = transponMatrix(matrixC);
+        return CT;
+    }
+
+    private static int[][] transponMatrix(int[][] matrixC) {
+        int matrixSize = matrixC.length;
         int[][] CT = new int[matrixSize][matrixSize];
         for (int i = 0; i < matrixSize; i++) {
             for (int j = 0; j < matrixSize; j++) {
