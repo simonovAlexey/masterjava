@@ -1,23 +1,73 @@
 <Payload xmlns="http://javaops.ru"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://javaops.ru payload.xsd">
+
+    <Groups>
+        <Group id="t12" project="top" type="REGISTERING">
+            <name>topjava12</name>
+        </Group>
+        <Group id="t7" project="top" type="FINISHED">
+            <name>topjava7</name>
+        </Group>
+        <Group id="t8" project="top" type="FINISHED">
+            <name>topjava8</name>
+        </Group>
+        <Group id="t9" project="top" type="FINISHED">
+            <name>topjava9</name>
+        </Group>
+        <Group id="t11" project="top" type="CURRENT">
+            <name>topjava11</name>
+        </Group>
+
+        <Group id="m2" project="master" type="CURRENT">
+            <name>masterjava2</name>
+        </Group>
+        <Group id="m3" project="master" type="REGISTERING">
+            <name>masterjava3</name>
+        </Group>
+        <Group id="m1" project="master" type="FINISHED">
+            <name>masterjava1</name>
+        </Group>
+    </Groups>
+
+    <Projects>
+        <Project id="top">
+            <group type="FINISHED">topjava7</group>
+            <name>topJava</name>
+            <description>Описание ТОПджава</description>
+        </Project>
+        <Project id="master">
+            <name>masterJava</name>
+            <description>Описание МАСТЕРджава</description>
+        </Project>
+    </Projects>
+
     <Users>
         <User flag="active" city="kiv">
             <email>gmail@gmail.com</email>
             <fullName>Full Name</fullName>
+            <group refid="m2"/>
+            <group refid="t8"/>
         </User>
+
         <User flag="superuser" city="spb">
             <email>admin@javaops.ru</email>
             <fullName>Admin</fullName>
+            <group refid="m1"/>
         </User>
+
         <User flag="deleted" city="spb">
             <email>mail@yandex.ru</email>
             <fullName>Deleted</fullName>
+            <group refid="t7"/>
+            <group refid="m3"/>
         </User>
     </Users>
+
     <Cities>
         <City id="spb">Санкт-Петербург</City>
         <City id="kiv">Киев</City>
         <City id="mnsk">Минск</City>
     </Cities>
+
 </Payload>
