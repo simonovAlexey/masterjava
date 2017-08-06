@@ -1,0 +1,35 @@
+<Fleet xmlns="http://javaops.ru"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://javaops.ru fleet.xsd">
+    <Car id="car1">
+        <plate>AAA</plate>
+        <mark>Peugeot</mark>
+        <model>206</model>
+    </Car>
+
+    <Trailer id="trailer1">
+        <plate>EEE</plate>
+        <mark>Scania</mark>
+        <model>1</model>
+    </Trailer>
+
+
+    <Trailer id="trailer2">
+        <plate>EEE2</plate>
+        <mark>Scania2</mark>
+        <model>2</model>
+    </Trailer>
+
+
+
+    <TrailerTruck>
+        <Car refid="car1"/>
+        <TrailerC refid="trailer1"/>
+    </TrailerTruck>
+
+    <TrailerTruck>
+        <Car refid="car1"/>
+        <TrailerC refid="trailer2"/>
+    </TrailerTruck>
+
+</Fleet>

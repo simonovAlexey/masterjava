@@ -6,7 +6,14 @@
 
     <xs:element name="Payload">
         <xs:complexType>
-            <xs:all>
+            <xs:sequence>
+                <xs:element name="Projects">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                            <xs:element ref="Project"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
                 <xs:element name="Cities">
                     <xs:complexType>
                         <xs:sequence minOccurs="1" maxOccurs="unbounded">
@@ -21,55 +28,39 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="Projects">
-                    <xs:complexType>
-                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                            <xs:element ref="Project"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Groups">
-                    <xs:complexType>
-                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                            <xs:element ref="Group"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-            </xs:all>
+            </xs:sequence>
         </xs:complexType>
-
-        <xs:key name="PK_UserGroup">
-            <xs:selector xpath="Group"/>
-            <xs:field xpath="@id"/>
-        </xs:key>
-        <xs:keyref name="FK_UserGroup" refer="PK_UserGroup">
-            <xs:selector xpath="User/group"/>
-            <xs:field xpath="@refid"/>
-        </xs:keyref>
-
-        <!--  ___________________PROJECT-GROUP___________________ -->
-
-        <xs:key name="PK_Project">
-            <xs:selector xpath="Project"/>
-            <xs:field xpath="@id"/>
-        </xs:key>
-        <xs:keyref name="FK_Group" refer="PK_Project">
-            <xs:selector xpath="Group/project"/>
-            <xs:field xpath="@id"/>
-        </xs:keyref>
     </xs:element>
 
-    <!--  ________________________USER____________________ -->
+    <xs:element name="Project">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element type="xs:string" name="description"/>
+                <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                    <xs:element name="Group">
+                        <xs:complexType>
+                            <xs:attribute type="xs:ID" name="name" use="required"/>
+                            <xs:attribute type="groupType" name="type" use="required"/>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:sequence>
+            <xs:attribute type="xs:string" name="name" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="City" type="cityType"/>
 
     <xs:element name="User">
         <xs:complexType>
-            <xs:sequence>
-                <xs:element type="xs:string" name="email"/>
-                <xs:element type="xs:string" name="fullName"/>
-                <xs:element type="groupTypeRefID" name="group" minOccurs="1" maxOccurs="unbounded"/>
-            </xs:sequence>
-            <xs:attribute type="flagType" name="flag" use="required"/>
-            <xs:attribute type="xs:IDREF" name="city" use="required"/>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute type="emailAddressType" name="email"/>
+                    <xs:attribute type="flagType" name="flag" use="required"/>
+                    <xs:attribute type="xs:IDREF" name="city" use="required"/>
+                    <xs:attribute type="xs:IDREFS" name="groupRefs" use="optional"/>
+                </xs:extension>
+            </xs:simpleContent>
         </xs:complexType>
     </xs:element>
 
@@ -81,9 +72,13 @@
         </xs:restriction>
     </xs:simpleType>
 
-    <!--  ________________________CITY____________________ -->
-
-    <xs:element name="City" type="cityType"/>
+    <xs:simpleType name="groupType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="REGISTERING"/>
+            <xs:enumeration value="CURRENT"/>
+            <xs:enumeration value="FINISHED"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:complexType name="cityType">
         <xs:simpleContent>
@@ -93,78 +88,10 @@
         </xs:simpleContent>
     </xs:complexType>
 
-    <!--  ________________________PROJECT____________________ -->
-
-    <xs:element name="Project" type="projectType"/>
-
-    <xs:complexType name="projectType">
-        <xs:sequence maxOccurs="unbounded">
-            <xs:element type="xs:string" name="name"/>
-            <xs:element type="xs:string" name="description"/>
-        </xs:sequence>
-        <xs:attribute name="id" type="xs:ID"/>
-
-    </xs:complexType>
-
-
-    <!--  ________________________GROUP____________________ -->
-
-    <xs:element name="Group" type="groupType"/>
-
-    <!--<xs:complexType name="groupType">
-        <xs:simpleContent >
-            <xs:extension base="xs:string">
-                <xs:attribute type="xs:ID" name="id" use="required"/>
-
-                <xs:attribute type="groupStatusType" name="type"/>
-                <xs:attribute type="projectType" name="project"/>
-            </xs:extension>
-
-        </xs:simpleContent>
-    </xs:complexType>-->
-
-    <xs:complexType name="groupType">
-        <xs:complexContent>
-            <xs:extension base="baseGroupType">
-                <xs:attribute name="id" type="xs:ID"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
-    <xs:complexType name="groupTypeRefID">
-        <xs:complexContent>
-            <xs:extension base="baseGroupType">
-                <xs:attribute name="refid" type="xs:IDREF"/>
-            </xs:extension>
-        </xs:complexContent>
-    </xs:complexType>
-
-    <!--<xs:complexType name="baseGroupType" abstract="true">
-        <xs:simpleContent>
-            <xs:extension base="xs:string">
-                <xs:attribute type="groupStatusType" name="type"/>
-                <xs:attribute type="projectType" name="project"/>
-            </xs:extension>
-
-        </xs:simpleContent>
-    </xs:complexType>-->
-
-    <xs:complexType name="baseGroupType" abstract="true">
-        <xs:sequence minOccurs="0">
-            <xs:element name="name" type="xs:string" minOccurs="1"/>
-        </xs:sequence>
-        <xs:attribute type="groupStatusType" name="type"/>
-        <xs:attribute type="xs:IDREF" name="project"/>
-    </xs:complexType>
-
-
-    <xs:simpleType name="groupStatusType">
+    <!--http://stackoverflow.com/a/2147904/548473    -->
+    <xs:simpleType name="emailAddressType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="REGISTERING"/>
-            <xs:enumeration value="CURRENT"/>
-            <xs:enumeration value="FINISHED"/>
+            <xs:pattern value="([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})"/>
         </xs:restriction>
     </xs:simpleType>
-
-
 </xs:schema>
