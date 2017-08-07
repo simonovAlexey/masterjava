@@ -3,6 +3,7 @@ package ru.javaops.masterjava.xml;
 import com.google.common.io.Resources;
 import ru.javaops.masterjava.xml.schema.ObjectFactory;
 import ru.javaops.masterjava.xml.schema.Payload;
+import ru.javaops.masterjava.xml.schema.Project;
 import ru.javaops.masterjava.xml.schema.User;
 import ru.javaops.masterjava.xml.util.JaxbParser;
 import ru.javaops.masterjava.xml.util.Schemas;
@@ -19,9 +20,8 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class MainXml {
     private static final JaxbParser JAXB_PARSER = new JaxbParser(ObjectFactory.class);
@@ -32,10 +32,10 @@ public class MainXml {
 
     public static void main(String[] args) {
         String fileS = (args.length == 0) ? fileS = "payload.xml" : args[0];
-        /*printUsersJaxB(fileS);
-        printUsersStax(fileS);*/
+        printUsersJaxB(fileS, "topjava");
+//        printUsersStax(fileS);
 //        printUserTabeleXSLT(fileS);
-        printGroupTabeleXSLT(fileS);
+//        printGroupTabeleXSLT(fileS);
 
     }
 
@@ -46,6 +46,7 @@ public class MainXml {
 
 
     }
+
     private static void printGroupTabeleXSLT(String fileS) {
         String outputHTML = "groupXSLT.html";
         String templateXSL = "groupTemplate.xsl";
@@ -55,8 +56,8 @@ public class MainXml {
     }
 
     private static void doXsltTransform(String fileS, String outputHTML, String templateXSL) {
-        try(InputStream fXML = getInputStream(fileS);
-            InputStream fXSL = getInputStream(templateXSL)) {
+        try (InputStream fXML = getInputStream(fileS);
+             InputStream fXSL = getInputStream(templateXSL)) {
             TransformerFactory factory = TransformerFactory.newInstance();
             StreamSource xslStream = new StreamSource(fXSL);
             Transformer transformer = factory.newTransformer(xslStream);
@@ -108,7 +109,7 @@ public class MainXml {
         return is;
     }
 
-    private static void printUsersJaxB(String fileS) {
+    private static void printUsersJaxB(String fileS, String project) {
         try (InputStream is = getInputStream(fileS)) {
             Payload payload = null;
             try {
@@ -116,10 +117,18 @@ public class MainXml {
             } catch (JAXBException e) {
                 e.printStackTrace();
             }
-            List<User> users = payload.getUsers().getUser();
-            Collections.sort(users, (o1, o2) -> o1.getValue().compareTo(o2.getValue()));
-            for (User u : users) {
-                System.out.println(u);
+            ArrayList<String> groupsNameL = new ArrayList<>();
+            HashSet<String> groupsName = new HashSet<>();
+            payload.getProjects().getProject()
+                    .stream()
+                    .filter(p -> p.getName().equals(project))
+                    .forEach(p -> p.getGroup().forEach(g -> groupsNameL.add(g.getName())));
+
+            List<User> allUsers = payload.getUsers().getUser();
+            for (User u : allUsers) {
+                List<String> userGroup = u.getGroupRefs().stream().map(g -> ((Project.Group) g).getName()).collect(Collectors.toList());
+                if (!Collections.disjoint(userGroup, groupsNameL))
+                    System.out.println(u);
             }
         } catch (IOException e) {
             e.printStackTrace();
