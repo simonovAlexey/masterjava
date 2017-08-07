@@ -34,15 +34,29 @@ public class MainXml {
         String fileS = (args.length == 0) ? fileS = "payload.xml" : args[0];
         /*printUsersJaxB(fileS);
         printUsersStax(fileS);*/
-        printUserTabeleXSLT(fileS);
+//        printUserTabeleXSLT(fileS);
+        printGroupTabeleXSLT(fileS);
 
     }
 
     private static void printUserTabeleXSLT(String fileS) {
-        String outputHTML = null;
+        String outputHTML = "outputXSLT.html";
+        String templateXSL = "userTabele.xsl";
+        doXsltTransform(fileS, outputHTML, templateXSL);
+
+
+    }
+    private static void printGroupTabeleXSLT(String fileS) {
+        String outputHTML = "groupXSLT.html";
+        String templateXSL = "groupTemplate.xsl";
+        doXsltTransform(fileS, outputHTML, templateXSL);
+
+
+    }
+
+    private static void doXsltTransform(String fileS, String outputHTML, String templateXSL) {
         try(InputStream fXML = getInputStream(fileS);
-            InputStream fXSL = getInputStream("userTabele.xsl")) {
-            outputHTML = "outputXSLT.html";
+            InputStream fXSL = getInputStream(templateXSL)) {
             TransformerFactory factory = TransformerFactory.newInstance();
             StreamSource xslStream = new StreamSource(fXSL);
             Transformer transformer = factory.newTransformer(xslStream);
@@ -56,8 +70,6 @@ public class MainXml {
             e.printStackTrace();
         }
         System.out.println("The generated HTML file is: " + outputHTML);
-
-
     }
 
     private static void printUsersStax(String fileS) {
