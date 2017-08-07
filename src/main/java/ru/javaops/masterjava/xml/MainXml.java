@@ -12,6 +12,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.events.XMLEvent;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
@@ -27,8 +32,30 @@ public class MainXml {
 
     public static void main(String[] args) {
         String fileS = (args.length == 0) ? fileS = "payload.xml" : args[0];
-        printUsersJaxB(fileS);
-        printUsersStax(fileS);
+        /*printUsersJaxB(fileS);
+        printUsersStax(fileS);*/
+        printUserTabeleXSLT(fileS);
+
+    }
+
+    private static void printUserTabeleXSLT(String fileS) {
+        String outputHTML = null;
+        try(InputStream fXML = getInputStream(fileS);
+            InputStream fXSL = getInputStream("userTabele.xsl")) {
+            outputHTML = "outputXSLT.html";
+            TransformerFactory factory = TransformerFactory.newInstance();
+            StreamSource xslStream = new StreamSource(fXSL);
+            Transformer transformer = factory.newTransformer(xslStream);
+
+            StreamSource in = new StreamSource(fXML);
+            StreamResult out = new StreamResult(outputHTML);
+            transformer.transform(in, out);
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("The generated HTML file is: " + outputHTML);
 
 
     }
