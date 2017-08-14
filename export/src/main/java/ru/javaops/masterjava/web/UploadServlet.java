@@ -47,16 +47,8 @@ public class UploadServlet extends HttpServlet {
         String fileName = fileItems.get(0).getName();
         String fileString = fileItems.get(0).getString();
         InputStream is = fileItems.get(0).getInputStream();
-        /*try (StaxStreamProcessor processor = new StaxStreamProcessor(is)){
-            String city;
 
-            while ((city = processor.getElementValue("City")) != null) {
-                System.out.println(city);
-            }
-        } catch (XMLStreamException e) {
-            e.printStackTrace();
-        }*/
-        Set<User> users = processByStax("", is);
+        Set<User> users = processByStax(is);
 
 
         req.setAttribute("fileName", fileName);
@@ -64,7 +56,7 @@ public class UploadServlet extends HttpServlet {
         req.getRequestDispatcher("jsp//output.jsp").forward(req, resp);
     }
 
-    private static Set<User> processByStax(String projectName, InputStream is) {
+    private static Set<User> processByStax(InputStream is) {
 
         try (StaxStreamProcessor processor = new StaxStreamProcessor(is)) {
             final Set<String> groupNames = new HashSet<>();
