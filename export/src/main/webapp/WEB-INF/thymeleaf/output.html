@@ -1,0 +1,24 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User output Thymeleaf</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+
+<h1>Users from file: <span th:text="${fileName}"/></h1>
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Flag</th>
+    </tr>
+    <tr th:each="user : ${list}">
+        <td th:text="${user.value}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.flag}"></td>
+    </tr>
+</table>
+
+</body>
+</html>
