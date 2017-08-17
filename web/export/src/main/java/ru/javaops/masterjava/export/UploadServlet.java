@@ -31,12 +31,13 @@ public class UploadServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final WebContext webContext = new WebContext(req, resp, req.getServletContext(), req.getLocale());
-
+        Integer chunkSize = null;
         try {
+            chunkSize = Integer.parseInt(req.getParameter("chunkSize"));
 //            http://docs.oracle.com/javaee/6/tutorial/doc/glraq.html
             Part filePart = req.getPart("fileToUpload");
             try (InputStream is = filePart.getInputStream()) {
-                List<User> users = userExport.process(is);
+                List<User> users = userExport.process(is,chunkSize);
                 webContext.setVariable("users", users);
                 engine.process("result", webContext, resp.getWriter());
             }

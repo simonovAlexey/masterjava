@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.persist.UserTestData;
 import ru.javaops.masterjava.persist.model.User;
 
@@ -35,5 +36,7 @@ public class UserDaoTest extends AbstractDaoTest<UserDao> {
     public void getWithLimit() {
         List<User> users = dao.getWithLimit(5);
         Assert.assertEquals(FIST5_USERS, users);
+        UserDao dao = DBIProvider.getDao(UserDao.class);
+        dao.clean();
     }
 }

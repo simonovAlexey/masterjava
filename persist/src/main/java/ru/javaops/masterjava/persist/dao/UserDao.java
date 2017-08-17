@@ -5,6 +5,8 @@ import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapperFactory;
 import ru.javaops.masterjava.persist.model.User;
 
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,6 +27,11 @@ public abstract class UserDao implements AbstractDao {
         }
         return user;
     }
+    public List<User> insertAll(List<User> users) throws SQLException {
+        int[] ints = insertAllBatch(users);
+        if (Arrays.asList(ints).contains(0)) throw new SQLException("error insert User");
+        return users;
+    }
 
     @SqlUpdate("INSERT INTO users (full_name, email, flag) VALUES (:fullName, :email, CAST(:flag AS user_flag)) ")
     @GetGeneratedKeys
@@ -32,6 +39,10 @@ public abstract class UserDao implements AbstractDao {
 
     @SqlUpdate("INSERT INTO users (id, full_name, email, flag) VALUES (:id, :fullName, :email, CAST(:flag AS user_flag)) ")
     abstract void insertWitId(@BindBean User user);
+
+    @SqlBatch("INSERT INTO users (full_name, email, flag) VALUES (:fullName, :email, CAST(:flag AS user_flag)) ")
+//    @GetGeneratedKeys
+    abstract int[] insertAllBatch(@BindBean Iterable<User> users);
 
     @SqlQuery("SELECT * FROM users ORDER BY full_name, email LIMIT :it")
     public abstract List<User> getWithLimit(@Bind int limit);
