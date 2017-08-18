@@ -34,8 +34,8 @@ public class UserExport {
             final User user = new User(fullName, email, flag);
             temp.add(user);
             if (temp.size() % chunkSize == 0) {
-                dao.insertAll(Collections.unmodifiableList(temp));
-                users.addAll(temp);
+
+                users.addAll(dao.insertAll(Collections.unmodifiableList(temp)));
                 temp = new ArrayList<>();
             }
         }

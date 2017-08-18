@@ -6,7 +6,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapperFactory;
 import ru.javaops.masterjava.persist.model.User;
 
 import java.sql.SQLException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,10 +27,15 @@ public abstract class UserDao implements AbstractDao {
         }
         return user;
     }
+
     public List<User> insertAll(List<User> users) throws SQLException {
         int[] ints = insertAllBatch(users);
-        if (Arrays.asList(ints).contains(0)) throw new SQLException("error insert User");
-        return users;
+        List<User> result = new ArrayList<>();
+        for (int i = 0; i < users.size(); i++) {
+            if (ints[i]==0) result.add(users.get(i));
+        }
+//        if (Arrays.asList(ints).contains(0)) throw new SQLException("error insert User");
+        return result;
     }
 
     @SqlUpdate("INSERT INTO users (full_name, email, flag) VALUES (:fullName, :email, CAST(:flag AS user_flag)) ")
@@ -40,7 +45,7 @@ public abstract class UserDao implements AbstractDao {
     @SqlUpdate("INSERT INTO users (id, full_name, email, flag) VALUES (:id, :fullName, :email, CAST(:flag AS user_flag)) ")
     abstract void insertWitId(@BindBean User user);
 
-    @SqlBatch("INSERT INTO users (full_name, email, flag) VALUES (:fullName, :email, CAST(:flag AS user_flag)) ")
+    @SqlBatch("INSERT INTO users (full_name, email, flag) VALUES (:fullName, :email, CAST(:flag AS user_flag)) ON CONFLICT (email) DO NOTHING;")
 //    @GetGeneratedKeys
     abstract int[] insertAllBatch(@BindBean Iterable<User> users);
 
