@@ -5,7 +5,6 @@ import org.skife.jdbi.v2.sqlobject.*;
 import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapperFactory;
 import ru.javaops.masterjava.persist.model.User;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public abstract class UserDao implements AbstractDao {
         return user;
     }
 
-    public List<User> insertAll(List<User> users) throws SQLException {
+    public List<User> insertAll(List<User> users) {
         int[] ints = insertAllBatch(users);
         List<User> result = new ArrayList<>();
         for (int i = 0; i < users.size(); i++) {

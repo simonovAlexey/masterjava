@@ -1,7 +1,6 @@
 package ru.javaops.masterjava.export;
 
 import org.thymeleaf.context.WebContext;
-import ru.javaops.masterjava.persist.model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import static ru.javaops.masterjava.export.ThymeleafListener.engine;
 
@@ -37,8 +35,9 @@ public class UploadServlet extends HttpServlet {
 //            http://docs.oracle.com/javaee/6/tutorial/doc/glraq.html
             Part filePart = req.getPart("fileToUpload");
             try (InputStream is = filePart.getInputStream()) {
-                List<User> users = userExport.process(is,chunkSize);
-                webContext.setVariable("users", users);
+                UserExport.GroupResult process = userExport.process(is, chunkSize);
+
+                webContext.setVariable("users", process);
                 engine.process("result", webContext, resp.getWriter());
             }
         } catch (Exception e) {

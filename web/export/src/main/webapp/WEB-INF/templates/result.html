@@ -5,6 +5,8 @@
 </head>
 <body>
 <h4><a href="">Export XML</a></h4>
+<p>Users added: <span th:utext="${users.success}"></span> </p>
+<p th:utext="${users.failedCause}">No failed case</p>
 <h3>Users already in DB</h3>
 <table border="1" cellpadding="8" cellspacing="0">
     <thead>
@@ -15,10 +17,10 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="user : ${users}">
-        <td th:text="${user.fullName}"></td>
-        <td th:utext="${user.email}"></td>
-        <td th:text="${user.flag}"></td>
+    <tr th:each="userR : ${users.failed}">
+        <td th:text="${userR.user.fullName}"></td>
+        <td th:utext="${userR.user.email}"></td>
+        <td th:text="${userR.user.flag}"></td>
     </tr>
     </tbody>
 </table>
