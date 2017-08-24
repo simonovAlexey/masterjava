@@ -6,6 +6,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import ru.javaops.masterjava.persist.model.Group;
 import ru.javaops.masterjava.persist.model.GroupType;
+import ru.javaops.masterjava.persist.model.User;
+import ru.javaops.masterjava.persist.model.UserFlag;
 
 import java.util.List;
 
@@ -21,7 +23,9 @@ public class GroupDaoTest extends AbstractDaoTest<GroupDao>{
 
     @BeforeClass
     public static void init() {
-//        t6withUser = new Group(1113,"topjava6", GroupType.FINISHED,ImmutableList.of(UserTestData.ADMIN, UserTestData.USER1));
+        User ADMIN = new User(111000,"Admin", "admin@javaops.ru", UserFlag.superuser);
+        User DELETED = new User(111001,"Deleted", "deleted@yandex.ru", UserFlag.deleted);
+        t6withUser = new Group(1113,"topjava6", GroupType.FINISHED,ImmutableList.of(ADMIN, DELETED));
         t7 = new Group(1111,"topjava7", GroupType.FINISHED);
         m1 = new Group(1112,"masterjava1",GroupType.CURRENT);
         groups = ImmutableList.of(t7, m1);
@@ -49,6 +53,11 @@ public class GroupDaoTest extends AbstractDaoTest<GroupDao>{
         List<Group> getList = dao.getWithUsers();
         Assert.assertEquals(getList.size(),2);
         Assert.assertEquals(getList.get(0).getUsers().size(),3);
+        System.out.println(" ");
+    }
+    @Test
+    public void insertGroupWithUserTest(){
+        Group insert = dao.insert(t6withUser);
         System.out.println(" ");
     }
 

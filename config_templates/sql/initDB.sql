@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS groups CASCADE;
 DROP TABLE IF EXISTS projects CASCADE;
 DROP TABLE IF EXISTS cities CASCADE;
 DROP TABLE IF EXISTS grouprefs CASCADE;
-DROP TABLE IF EXISTS prject_groups CASCADE;
+DROP TABLE IF EXISTS project_groups CASCADE;
 DROP TYPE IF EXISTS USER_FLAG;
 DROP TYPE IF EXISTS GROUP_TYPE;
 DROP SEQUENCE IF EXISTS user_seq;
@@ -31,13 +31,6 @@ CREATE TABLE users (
 CREATE UNIQUE INDEX email_idx
   ON users (email);
 
-
-CREATE TABLE projects (
-  id          INTEGER PRIMARY KEY DEFAULT nextval('all_seq'),
-  name        TEXT NOT NULL,
-  description TEXT NOT NULL
-);
-
 CREATE TYPE GROUP_TYPE AS ENUM ('REGISTERING', 'CURRENT', 'FINISHED');
 
 CREATE TABLE groups (
@@ -46,7 +39,16 @@ CREATE TABLE groups (
   type GROUP_TYPE NOT NULL
 );
 
-CREATE TABLE prject_groups (
+CREATE TABLE projects (
+  id          INTEGER PRIMARY KEY DEFAULT nextval('all_seq'),
+  name        TEXT NOT NULL,
+  description TEXT NOT NULL
+--   p_groups INTEGER REFERENCES groups(id) ON DELETE RESTRICT
+);
+
+
+
+CREATE TABLE project_groups (
   project_id INTEGER REFERENCES projects (id) ON DELETE RESTRICT,
   group_id   INTEGER REFERENCES groups (id) ON DELETE CASCADE,
   PRIMARY KEY (project_id, group_id)
