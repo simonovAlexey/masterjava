@@ -60,11 +60,11 @@ public abstract class GroupDao implements AbstractDao {
     @SqlQuery("SELECT * FROM groups ORDER BY id")
     public abstract List<Group> getAll();
 
-    @SqlUpdate("INSERT INTO groups (name, type) VALUES (:name, CAST(:type AS group_type)) ")
+    @SqlUpdate("INSERT INTO groups (name, type) VALUES (:name, CAST(:type AS group_type)) ON CONFLICT DO NOTHING ")
     @GetGeneratedKeys
     abstract int insertGeneratedId(@BindBean Group group);
 
-    @SqlUpdate("INSERT INTO groups (id, name, type) VALUES (:id, :name, CAST(:type AS group_type)) ")
+    @SqlUpdate("INSERT INTO groups (id, name, type) VALUES (:id, :name, CAST(:type AS group_type)) ON CONFLICT DO NOTHING")
     abstract int insertOne(@BindBean Group group);
 
     @Mapper(GroupMapper.class)
