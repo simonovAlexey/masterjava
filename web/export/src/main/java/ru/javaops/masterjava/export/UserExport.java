@@ -4,7 +4,9 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import one.util.streamex.StreamEx;
 import ru.javaops.masterjava.persist.DBIProvider;
+import ru.javaops.masterjava.persist.dao.CityDao;
 import ru.javaops.masterjava.persist.dao.UserDao;
+import ru.javaops.masterjava.persist.model.City;
 import ru.javaops.masterjava.persist.model.User;
 import ru.javaops.masterjava.persist.model.UserFlag;
 import ru.javaops.masterjava.xml.util.StaxStreamProcessor;
@@ -29,6 +31,7 @@ public class UserExport {
     private static final int NUMBER_THREADS = 4;
     private final ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_THREADS);
     private final UserDao userDao = DBIProvider.getDao(UserDao.class);
+    private final CityDao cityDao = DBIProvider.getDao(CityDao.class);
 
     @Value
     public static class FailedEmail {
@@ -66,6 +69,17 @@ public class UserExport {
                 List<User> chunk = new ArrayList<>(chunkSize);
                 final StaxStreamProcessor processor = new StaxStreamProcessor(is);
 
+                ArrayList<City> cities = new ArrayList<>();
+                while (true) {
+                    if ("City".equals(processor.doUntilStartEvEndEv("City", "Cities"))) {
+                        final String idCity = processor.getAttribute("id");
+                        final String value = processor.getReader().getElementText();
+                        final City city = new City(idCity, value);
+                        cities.add(city);
+                    } else break;
+                }
+                cityDao.insertBatch(cities);
+                log.info("{} cities successfully added.",cities.size());
                 while (processor.doUntil(XMLEvent.START_ELEMENT, "User")) {
                     final String email = processor.getAttribute("email");
                     final UserFlag flag = UserFlag.valueOf(processor.getAttribute("flag"));
