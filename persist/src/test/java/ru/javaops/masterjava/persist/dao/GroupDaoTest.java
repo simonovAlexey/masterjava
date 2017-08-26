@@ -23,8 +23,8 @@ public class GroupDaoTest extends AbstractDaoTest<GroupDao>{
 
     @BeforeClass
     public static void init() {
-        User ADMIN = new User(111000,"Admin", "admin@javaops.ru", UserFlag.superuser);
-        User DELETED = new User(111001,"Deleted", "deleted@yandex.ru", UserFlag.deleted);
+        User ADMIN = new User(111000,"Admin", "admin@javaops.ru","msk", UserFlag.superuser);
+        User DELETED = new User(111001,"Deleted", "deleted@yandex.ru","msk", UserFlag.deleted);
         t6withUser = new Group(1113,"topjava6", GroupType.FINISHED,ImmutableList.of(ADMIN, DELETED));
         t7 = new Group(1111,"topjava7", GroupType.FINISHED);
         m1 = new Group(1112,"masterjava1",GroupType.CURRENT);

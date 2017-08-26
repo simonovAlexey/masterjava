@@ -79,12 +79,13 @@ public class UserExport {
                     } else break;
                 }
                 cityDao.insertBatch(cities);
-                log.info("{} cities successfully added.",cities.size());
+                log.info("{} cities successfully added.", cities.size());
                 while (processor.doUntil(XMLEvent.START_ELEMENT, "User")) {
                     final String email = processor.getAttribute("email");
+                    final String city = processor.getAttribute("city");
                     final UserFlag flag = UserFlag.valueOf(processor.getAttribute("flag"));
                     final String fullName = processor.getReader().getElementText();
-                    final User user = new User(id++, fullName, email, flag);
+                    final User user = new User(id++, fullName, email, city, flag);
                     chunk.add(user);
                     if (chunk.size() == chunkSize) {
                         ChunkFuture submit = submit(chunk);

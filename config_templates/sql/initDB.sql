@@ -24,7 +24,7 @@ CREATE TABLE users (
   id        INTEGER PRIMARY KEY DEFAULT nextval('user_seq'),
   full_name TEXT      NOT NULL,
   email     TEXT      NOT NULL,
-  --   city      TEXT REFERENCES citys (id) ON DELETE RESTRICT,
+  city      TEXT REFERENCES cities (id) ON DELETE RESTRICT,
   flag      USER_FLAG NOT NULL
 );
 
@@ -43,9 +43,8 @@ CREATE TABLE projects (
   id          INTEGER PRIMARY KEY DEFAULT nextval('all_seq'),
   name        TEXT NOT NULL,
   description TEXT NOT NULL
---   p_groups INTEGER REFERENCES groups(id) ON DELETE RESTRICT
+  --   p_groups INTEGER REFERENCES groups(id) ON DELETE RESTRICT
 );
-
 
 
 CREATE TABLE project_groups (

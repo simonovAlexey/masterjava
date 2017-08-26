@@ -23,6 +23,7 @@ public class GroupMapper implements ResultSetMapper<List<Group>> {
                 User user = new User(rs.getInt("id"),
                         rs.getString("full_name"),
                         rs.getString("email"),
+                        rs.getString("city"),
                         UserFlag.valueOf(rs.getString("flag")));
                 if (user.getId() > 0) {
                     group.getUsers().add(user);
