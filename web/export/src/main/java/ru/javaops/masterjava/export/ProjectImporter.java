@@ -14,13 +14,14 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class ProjectImporter {
     private final ProjectDao projectDao = DBIProvider.getDao(ProjectDao.class);
     private final GroupDao groupDao = DBIProvider.getDao(GroupDao.class);
 
-    public List<Group> process(StaxStreamProcessor processor) throws XMLStreamException {
+    public Map<String,Group> process(StaxStreamProcessor processor) throws XMLStreamException {
         String element;
         Project project = null;
         List<Group> groups = new ArrayList<>();
@@ -41,6 +42,6 @@ public class ProjectImporter {
                 groups.add(group);
             }
         }
-        return groups;
+        return groupDao.getAsMap();
     }
 }

@@ -2,11 +2,13 @@ package ru.javaops.masterjava.export;
 
 import lombok.Value;
 import lombok.val;
+import ru.javaops.masterjava.persist.model.Group;
 import ru.javaops.masterjava.xml.util.StaxStreamProcessor;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 public class PayloadImporter {
     private final ProjectImporter projectImporter = new ProjectImporter();
@@ -26,8 +28,8 @@ public class PayloadImporter {
 
     public List<PayloadImporter.FailedEmail> process(InputStream is, int chunkSize) throws XMLStreamException {
         final StaxStreamProcessor processor = new StaxStreamProcessor(is);
-        projectImporter.process(processor);
+        Map<String, Group> groups = projectImporter.process(processor);
         val cities = cityImporter.process(processor);
-        return userImporter.process(processor, cities, chunkSize);
+        return userImporter.process(processor, cities, groups, chunkSize);
     }
 }
