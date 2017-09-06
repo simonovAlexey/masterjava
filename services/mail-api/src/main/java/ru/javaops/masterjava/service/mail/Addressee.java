@@ -4,11 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.xml.bind.annotation.*;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "addressee", propOrder = {"name"})
 public class Addressee {
+
+    @XmlAttribute(name = "email")
     private String email;
+    @XmlValue
     private String name;
 
     public Addressee(String email) {

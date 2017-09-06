@@ -17,11 +17,11 @@ public class MailServiceClient {
         MailService mailService = service.getPort(MailService.class);
 
         mailService.sendToGroup(ImmutableSet.of(
-                new Addressee("gkislin@javaops.ru"),
+                new Addressee("nci@tut.by"),
                 new Addressee("Bad Email <bad_email.ru>")), ImmutableSet.of(), "Subject", "Body");
 
         mailService.sendToGroup(
-                ImmutableSet.of(new Addressee("Григорий Кислин <gkislin@javaops.ru>")),
-                ImmutableSet.of(new Addressee("Мастер Java <masterjava@javaops.ru>")), "Subject", "Body");
+                ImmutableSet.of(new Addressee("Григорий Кислин <nci@tut.by>")),
+                ImmutableSet.of(new Addressee("Мастер Java <3694369@gmail.com>")), "Subject", "Body");
     }
 }
