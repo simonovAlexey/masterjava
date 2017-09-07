@@ -31,7 +31,7 @@
                     </goals>
                     <configuration>
                         <sourceFile>${masterjava.config}/wsdl/mailService.wsdl</sourceFile>
-                        <destinationFile>src/test/resources/wsdl/mailService.wsdl</destinationFile>
+                        <destinationFile>src/main/resources/wsdl/mailService.wsdl</destinationFile>
                     </configuration>
                 </execution>
             </executions>

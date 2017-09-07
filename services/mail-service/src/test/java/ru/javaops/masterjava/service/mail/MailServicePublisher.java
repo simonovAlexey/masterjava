@@ -12,8 +12,9 @@ import java.util.List;
 public class MailServicePublisher {
 
     public static void main(String[] args) {
-        Endpoint.publish("http://localhost:8080/mail/mailService", new MailServiceImpl());
-        if (false) {DBITestProvider.initDBI();
+//        Endpoint.publish("http://localhost:8080/mail/mailService", new MailServiceImpl());
+//        if (false)
+        {DBITestProvider.initDBI();
 
         Endpoint endpoint = Endpoint.create(new MailServiceImpl());
         List<Source> metadata = ImmutableList.of(

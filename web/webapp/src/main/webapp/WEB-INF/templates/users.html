@@ -4,24 +4,39 @@
     <title>Users</title>
 </head>
 <body>
-<table border="1" cellpadding="8" cellspacing="0">
-    <thead>
-    <tr>
-        <th></th>
-        <th>Full Name</th>
-        <th>Email</th>
-        <th>Flag</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!--/*@thymesVar id="users" type="java.util.List<ru.javaops.masterjava.persist.model.User>"*/-->
-    <tr th:each="user,iter: ${users}">
-        <td th:text="${iter.count}"></td>
-        <td th:text="${user.fullName}"></td>
-        <td th:utext="${user.email}"></td>
-        <td th:text="${user.flag}"></td>
-    </tr>
-    </tbody>
-</table>
+<form method="post">
+    <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Send Email</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Flag</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--/*@thymesVar id="users" type="java.util.List<ru.javaops.masterjava.persist.model.User>"*/-->
+        <tr th:each="user,iter: ${users}">
+            <td th:text="${iter.count}"></td>
+            <td><label>
+                <input type="checkbox" th:name="chekedUser" th:value=" ${user.fullName} +' <'+${user.email}+'>'"/>
+            </label></td>
+            <td th:text="${user.fullName}"></td>
+            <td th:utext="${user.email}"></td>
+            <td th:text="${user.flag}"></td>
+        </tr>
+        <tr>
+            <td colspan="5"><label for="subject"> Subject </label><input id="subject" name="subject"/></td>
+        </tr>
+        <tr>
+            <td colspan="5"><label for="body"> Body </label><input id="body" name="body"/></td>
+        </tr>
+        <tr>
+            <td colspan="5"><input type="submit" value="Submit"/></td>
+        </tr>
+        </tbody>
+    </table>
+</form>
 </body>
 </html>
