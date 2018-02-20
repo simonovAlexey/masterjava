@@ -7,6 +7,7 @@ import ru.javaops.masterjava.config.Configs;
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
+import javax.xml.ws.soap.MTOMFeature;
 import java.net.URL;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class WsClient<T> {
 
     public WsClient(URL wsdlUrl, QName qname, Class<T> serviceClass) {
         this.serviceClass = serviceClass;
-        this.service = Service.create(wsdlUrl, qname);
+        this.service = Service.create(wsdlUrl, qname, new MTOMFeature(3072));
     }
 
     public void init(String host, String endpointAddress) {

@@ -7,61 +7,98 @@
 <!--http://stackoverflow.com/a/24070373/548473-->
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"
         integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-        crossorigin="anonymous" async>
+        crossorigin="anonymous" >
 </script>
 <body>
 <html>
 <body>
 <section>
-    <table border="1" cellpadding="8" cellspacing="0">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Full Name</th>
-            <th>Email</th>
-            <th>Flag</th>
-            <th/>
-        </tr>
-        </thead>
-        <tbody>
-        <!--/*@thymesVar id="users" type="java.util.List"*/-->
-        <!--/*@thymesVar id="user" type="ru.javaops.masterjava.persist.model.User"*/-->
-        <tr th:each="user,iter: ${users}">
-            <td th:text="${iter.count}"></td>
-            <td th:text="${user.fullName}"></td>
-            <td th:utext="${user.email}"></td>
-            <td th:text="${user.flag}"></td>
-            <td><input type="checkbox" th:value="|${user.fullName} <${user.email}>|"/></td>
-        </tr>
-        </tbody>
-    </table>
-    <hr/>
-    <p>
-        <input id="subject" placeholder="subject" size="30">
-    </p>
-    <p>
-        <textarea id="body" placeholder="mail body" cols=75 rows=5></textarea><br/>
-    </p>
-    <p>
-        <button type="button" onclick="send()">Send</button>
-    </p>
+    <form id="sendForm" name="sendForm" enctype="multipart/form-data">
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Flag</th>
+                <th/>
+            </tr>
+            </thead>
+            <tbody>
+            <!--/*@thymesVar id="users" type="java.util.List"*/-->
+            <!--/*@thymesVar id="user" type="ru.javaops.masterjava.persist.model.User"*/-->
+            <tr th:each="user,iter: ${users}">
+                <td th:text="${iter.count}"></td>
+                <td th:text="${user.fullName}"></td>
+                <td th:utext="${user.email}"></td>
+                <td th:text="${user.flag}"></td>
+                <td><input type="checkbox" th:value="|${user.fullName} <${user.email}>|"/></td>
+            </tr>
+            </tbody>
+        </table>
+        <hr/>
+        <p>
+            <input id="subject" placeholder="subject" size="30">
+        </p>
+        <p>
+            <textarea id="body" placeholder="mail body" cols=75 rows=5></textarea><br/>
+        </p>
+        <p>
+            <input type="file" id="fileToUpload" name="fileToUpload"><br/>
+        </p>
+        <p>
+            <button type="submit" >Send</button>
+            <!--onclick="send()"-->
+        </p>
+    </form>
+
     <div id="result"></div>
 </section>
 <script type="text/javascript">
-    function send() {
+
+        /*$("#sendForm").submit(function() {
+//            var myForm = document.getElementById('sendForm');
+//            var queryString = new FormData(myForm);
+//    function send() {
+        var queryString = new FormData();
+
         $('#result').html("Sending ...");
-        var users = $("input:checkbox:checked").map(function () {
-            return this.value;
-        }).get();
+                var users = $("input:checkbox:checked").map(function () {
+                   return this.value;
+                }).get();
+            queryString.append("users",users);
+            queryString.append("subject",$("#subject").val());
+            queryString.append("body",$("#body").val());
+            queryString.append("fileToUpload",$("#fileToUpload").next().val());
         $.ajax({
             type: "POST",
             url: "send",
-            data: "users=" + users + "&subject=" + $("#subject").val() + "&body=" + $("#body").val(),
+            cache: false,
+            contentType: false,
+            processData: false,
+            mimeTypes: "multipart/form-data",
+            data: queryString,
+//            "users=" + users + "&subject=" + $("#subject").val() +
+//            "&body=" + $("#body").val() + "&fileName=" + $("#fileToUpload").val(),
             success: function (result) {
                 $('#result').html(result);
             }
         });
-    }
+    });*/
+        $( '#sendForm' )
+            .submit( function( e ) {
+                $.ajax( {
+                    url: 'send',
+                    type: 'POST',
+                    data: new FormData( this ),
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+                        $('#result').html(result);
+                    }
+                } );
+                e.preventDefault();
+            } );
 </script>
 </body>
 </html>
